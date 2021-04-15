@@ -57,24 +57,42 @@ contract BlackJack {
         _;
     }
 
-    function choose_dealer(uint256 amount) public payable {
-        token.transfer(msg.sender, amount);
+    modifier check_balance(uint256 value) {
+        require(
+            token.balanceOf(msg.sender) >= value,
+            "You need more FishkaTokens to play"
+        );
+        _;
+    }
+
+    function choose_dealer(uint256 value) public check_balance(value) {
+        dealer.cashAmmount = value;
         dealer.name = msg.sender;
     }
 
-    function choose_player(uint256 value) public payable {
-        token.transfer(msg.sender, value);
+    function choose_player(uint256 value) public check_balance(value) {
+        player.cashAmmount = value;
         player.name = msg.sender;
     }
 
-    function add_money_player() public payable only_player {
-        player.cashAmmount += msg.value;
-        emit Deposit(msg.sender, msg.value);
+    function add_money_player(uint256 value)
+        public
+        payable
+        only_player
+        check_balance(value)
+    {
+        player.cashAmmount += value;
+        emit Deposit(msg.sender, value);
     } // увеличение ставки
 
-    function add_money_dealer() public payable only_dealer {
-        dealer.cashAmmount += msg.value;
-        emit Deposit(msg.sender, msg.value);
+    function add_money_dealer(uint256 value)
+        public
+        payable
+        only_dealer
+        check_balance(value)
+    {
+        dealer.cashAmmount += value;
+        emit Deposit(msg.sender, value);
         require(
             (player.cashAmmount) == dealer.cashAmmount,
             "Rates must be the same."
@@ -149,8 +167,10 @@ contract BlackJack {
     function stand() public {
         if (msg.sender == dealer.name) {
             standD = true;
+            token.approve(player.name, dealer.cashAmmount);
         } else {
             standP = true;
+            token.approve(dealer.name, player.cashAmmount);
         }
     } // завершить набор карт
 
@@ -176,13 +196,17 @@ contract BlackJack {
         );
         require(standP == true && standD == true, "Not all made 'stand");
         if ((player.sumPlayer > dealer.sumDealer) && (player.sumPlayer <= 21)) {
-            player.name.transfer(dealer.cashAmmount + player.cashAmmount);
+            //player.name.transfer(dealer.cashAmmount + player.cashAmmount);
+            token.transferFrom(dealer.name, player.name, dealer.cashAmmount);
+
             winner = player.name;
         } else if (player.sumPlayer == dealer.sumDealer) {
-            dealer.name.transfer(dealer.cashAmmount);
-            player.name.transfer(player.cashAmmount);
+            //token.transfer(dealer.name, player.name, d)
+            //dealer.name.transfer(dealer.cashAmmount);
+            //player.name.transfer(player.cashAmmount);
         } else {
-            dealer.name.transfer(dealer.cashAmmount + player.cashAmmount);
+            token.transferFrom(player.name, dealer.name, player.cashAmmount);
+            //dealer.name.transfer(dealer.cashAmmount + player.cashAmmount);
             winner = dealer.name;
         }
         emit Compare(
@@ -233,6 +257,7 @@ contract BlackJack {
     }
 
     constructor(FishkaToken _token) public {
+        token = _token;
         dealer.cashAmmount = 0;
         player.cashAmmount = 0;
         dealer.sumDealer = 0;

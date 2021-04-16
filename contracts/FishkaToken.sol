@@ -97,7 +97,7 @@ contract FishkaToken is Token {
     ) public returns (bool success) {
         uint256 allowance = allowed[_from][msg.sender];
         require(
-            balances[_from] >= _value && allowance >= _value,
+            balances[_from] >= _value,
             "token balance or allowance is lower than amount requested"
         );
         balances[_to] += _value;

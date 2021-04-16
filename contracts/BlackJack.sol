@@ -21,7 +21,7 @@ contract BlackJack {
         uint32 sumDealer; //сумма очков дилера
         Card[] cards;
     }
-    FishkaToken token;
+    FishkaToken token; //экземпляр токена
     Player player;
     Dealer dealer;
     Card[] public deck; //колода карт
@@ -195,18 +195,19 @@ contract BlackJack {
             "Rates must be the same."
         );
         require(standP == true && standD == true, "Not all made 'stand");
-        if ((player.sumPlayer > dealer.sumDealer) && (player.sumPlayer <= 21)) {
-            //player.name.transfer(dealer.cashAmmount + player.cashAmmount);
+        if (
+            (player.sumPlayer > dealer.sumDealer) &&
+            (player.sumPlayer <= 21) &&
+            (dealer.sumDealer <= 21)
+        ) {
             token.transferFrom(dealer.name, player.name, dealer.cashAmmount);
 
             winner = player.name;
         } else if (player.sumPlayer == dealer.sumDealer) {
-            //token.transfer(dealer.name, player.name, d)
-            //dealer.name.transfer(dealer.cashAmmount);
-            //player.name.transfer(player.cashAmmount);
+            token.transferFrom(dealer.name, player.name, dealer.cashAmmount);
+            token.transferFrom(player.name, dealer.name, player.cashAmmount);
         } else {
             token.transferFrom(player.name, dealer.name, player.cashAmmount);
-            //dealer.name.transfer(dealer.cashAmmount + player.cashAmmount);
             winner = dealer.name;
         }
         emit Compare(

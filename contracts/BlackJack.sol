@@ -79,7 +79,7 @@ contract BlackJack {
         public
         payable
         only_player
-        check_balance(value)
+        check_balance(player.cashAmmount + value)
     {
         player.cashAmmount += value;
         emit Deposit(msg.sender, value);
@@ -89,7 +89,7 @@ contract BlackJack {
         public
         payable
         only_dealer
-        check_balance(value)
+        check_balance(dealer.cashAmmount + value)
     {
         dealer.cashAmmount += value;
         emit Deposit(msg.sender, value);

@@ -167,10 +167,10 @@ contract BlackJack {
     function stand() public {
         if (msg.sender == dealer.name) {
             standD = true;
-            token.approve(player.name, dealer.cashAmmount);
+            token.approve(dealer.name,player.name, dealer.cashAmmount);
         } else {
             standP = true;
-            token.approve(dealer.name, player.cashAmmount);
+            token.approve(player.name, dealer.name, player.cashAmmount);
         }
     } // завершить набор карт
 

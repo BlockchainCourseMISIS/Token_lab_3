@@ -28,7 +28,7 @@ interface Token {
     /// @param _spender The address of the account able to transfer the tokens
     /// @param _value The amount of wei to be approved for transfer
     /// @return success Whether the approval was successful or not
-    function approve(address _spender, uint256 _value)
+    function approve(address _owner, address _spender, uint256 _value)
         external
         returns (bool success);
 
@@ -95,15 +95,15 @@ contract FishkaToken is Token {
         address _to,
         uint256 _value
     ) public returns (bool success) {
-        uint256 allowance = allowed[_from][msg.sender];
+        uint256 allowance = allowed[_from][_to];
         require(
-            balances[_from] >= _value,
+            allowance>=_value && balances[_from] >= _value,
             "token balance or allowance is lower than amount requested"
         );
         balances[_to] += _value;
         balances[_from] -= _value;
         if (allowance < MAX_UINT256) {
-            allowed[_from][msg.sender] -= _value;
+            allowed[_from][_to] -= _value;
         }
         emit Transfer(_from, _to, _value); //solhint-disable-line indent, no-unused-vars
         return true;
@@ -113,12 +113,12 @@ contract FishkaToken is Token {
         return balances[_owner];
     }
 
-    function approve(address _spender, uint256 _value)
+    function approve(address _owner, address _spender, uint256 _value)
         public
         returns (bool success)
     {
-        allowed[msg.sender][_spender] = _value;
-        emit Approval(msg.sender, _spender, _value); //solhint-disable-line indent, no-unused-vars
+        allowed[_owner][_spender] = _value;
+        emit Approval(_owner, _spender, _value); //solhint-disable-line indent, no-unused-vars
         return true;
     }
 

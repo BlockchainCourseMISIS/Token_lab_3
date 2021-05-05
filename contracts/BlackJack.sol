@@ -67,12 +67,16 @@ contract BlackJack {
 
     function choose_dealer(uint256 value) public check_balance(value) {
         dealer.cashAmmount = value;
+
         dealer.name = msg.sender;
+
+        token.transferFrom(dealer.name, address(this), value);
     }
 
     function choose_player(uint256 value) public check_balance(value) {
         player.cashAmmount = value;
         player.name = msg.sender;
+        token.transferFrom(player.name, address(this), value);
     }
 
     function add_money_player(uint256 value)
@@ -167,10 +171,10 @@ contract BlackJack {
     function stand() public {
         if (msg.sender == dealer.name) {
             standD = true;
-            token.approve(dealer.name,player.name, dealer.cashAmmount);
+            token.approve(player.name, dealer.cashAmmount);
         } else {
             standP = true;
-            token.approve(player.name, dealer.name, player.cashAmmount);
+            token.approve(dealer.name, player.cashAmmount);
         }
     } // завершить набор карт
 

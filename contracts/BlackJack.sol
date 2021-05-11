@@ -65,6 +65,13 @@ contract BlackJack {
         _;
     }
 
+    function get_balance_player()  public view returns(uint256 cash){
+        return player.cashAmmount;
+    }
+    function get_balance_dealer()  public view returns(uint256 cash){
+        return dealer.cashAmmount;
+    }
+
     function choose_dealer(uint256 value) public check_balance(value) {
         dealer.cashAmmount = value;
 

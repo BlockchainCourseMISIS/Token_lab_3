@@ -51,18 +51,32 @@ contract BlackJack {
         require(msg.sender == dealer.name, "Only dealer can call this.");
         _;
     }
-
     modifier only_player() {
         require(msg.sender == player.name, "Only player can call this.");
         _;
     }
-
     modifier check_balance(uint256 value) {
         require(
             token.balanceOf(msg.sender) >= value,
             "You need more FishkaTokens to play"
         );
         _;
+    }
+
+    function getStandD() external view returns (bool) {
+        return standD;
+    }
+
+    function getStandP() external view returns (bool) {
+        return standP;
+    }
+
+    function get_balance_player() public view returns (uint256 cash) {
+        return player.cashAmmount;
+    }
+
+    function get_balance_dealer() public view returns (uint256 cash) {
+        return dealer.cashAmmount;
     }
 
     function choose_dealer(uint256 value) public check_balance(value) {

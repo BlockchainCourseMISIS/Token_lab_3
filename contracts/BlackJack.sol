@@ -5,7 +5,7 @@ import "./FishkaToken.sol";
 
 contract BlackJack {
     struct Player {
-        address payable name; //имя игрока
+        address name; //имя игрока
         uint256 cashAmmount; //колличество денег
         bool hasCards;
         uint32 sumPlayer;
@@ -16,7 +16,7 @@ contract BlackJack {
         uint8 rate; //насколько карта сильна
     }
     struct Dealer {
-        address payable name; //имя дилера
+        address name; //имя дилера
         uint256 cashAmmount; //колличество денег
         uint32 sumDealer; //сумма очков дилера
         Card[] cards;
@@ -63,12 +63,20 @@ contract BlackJack {
         _;
     }
 
-    function getStandD() external view returns (bool) {
+    function get_stand_dealer() external view returns (bool) {
         return standD;
     }
 
-    function getStandP() external view returns (bool) {
+    function get_stand_player() external view returns (bool) {
         return standP;
+    }
+
+    function get_dealer_name() external view returns (address) {
+        return dealer.name;
+    }
+
+    function get_player_name() external view returns (address) {
+        return player.name;
     }
 
     function get_cards_amount() public view returns (uint256 count) {

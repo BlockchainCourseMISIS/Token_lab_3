@@ -24,7 +24,11 @@ contract("stand test", async (accounts) => {
     await black_jack.choose_dealer(2, { from: accounts[0] });
     await black_jack.choose_player(2, { from: accounts[1] });
 
-    //написать assert
+    const dealer_name = await black_jack.get_dealer_name();
+    const player_name = await black_jack.get_player_name();
+
+    assert.equal(dealer_name, accounts[0]);
+    assert.equal(player_name, accounts[1]);
   });
   it("give cards", async () => {
     const black_jack = await BlackJack.deployed();
@@ -80,8 +84,8 @@ contract("stand test", async (accounts) => {
     await black_jack.stand({ from: accounts[0] });
     await black_jack.stand({ from: accounts[1] });
 
-    const p = await black_jack.getStandP();
-    const d = await black_jack.getStandD();
+    const p = await black_jack.get_stand_player();
+    const d = await black_jack.get_stand_dealer();
     assert.isTrue(p);
     assert.isTrue(d);
   });

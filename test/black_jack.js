@@ -14,7 +14,7 @@ contract("stand test", async (accounts) => {
     assert.equal(balanceOf0, 5, "balance of dealer should be equal to 5");
     assert.equal(balanceOf1, 5, "balance of player should be equal to 5");
   });
-  it("add money", async () => {
+  it("choose dealer/player", async () => {
     const fishka_token = await FishkaToken.deployed();
     const black_jack = await BlackJack.deployed();
 
@@ -23,6 +23,44 @@ contract("stand test", async (accounts) => {
 
     await black_jack.choose_dealer(2, { from: accounts[0] });
     await black_jack.choose_player(2, { from: accounts[1] });
+
+    //написать assert
+  });
+  it("give cards", async () => {
+    const black_jack = await BlackJack.deployed();
+
+    await black_jack.giveCards({ from: accounts[0] });
+    let amount = await black_jack.get_cards_amount();
+    assert.equal(
+      amount.toNumber(),
+      49,
+      "amount of cards should be equal to 49"
+    );
+  });
+  it("hit dealer", async () => {
+    const black_jack = await BlackJack.deployed();
+    await black_jack.hit_dealer({ from: accounts[0] });
+    let amount = await black_jack.get_cards_amount();
+    assert.equal(
+      amount.toNumber(),
+      48,
+      "amount of cards should be equal to 48"
+    );
+  });
+  it("hit player", async () => {
+    const black_jack = await BlackJack.deployed();
+    await black_jack.hit_player({ from: accounts[1] });
+    let amount = await black_jack.get_cards_amount();
+
+    assert.equal(
+      amount.toNumber(),
+      47,
+      "amount of cards should be equal to 47"
+    );
+  });
+  it("add money", async () => {
+    const fishka_token = await FishkaToken.deployed();
+    const black_jack = await BlackJack.deployed();
 
     await fishka_token.approve(black_jack.address, 3, { from: accounts[0] });
     await fishka_token.approve(black_jack.address, 3, { from: accounts[1] });

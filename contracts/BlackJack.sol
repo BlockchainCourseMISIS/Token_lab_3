@@ -71,6 +71,10 @@ contract BlackJack {
         return standP;
     }
 
+    function get_cards_amount() public view returns (uint256 count) {
+        return ammountOfCards;
+    }
+
     function get_balance_player() public view returns (uint256 cash) {
         return player.cashAmmount;
     }

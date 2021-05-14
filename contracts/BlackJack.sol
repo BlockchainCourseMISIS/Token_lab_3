@@ -26,7 +26,7 @@ contract BlackJack {
     Dealer dealer;
     Card[] public deck; //колода карт
 
-    address winner;
+    address public winner;
     bool public standP; // сделал ли стэнд игрок
     bool public standD; // сделал ли стэнд дилер
 
@@ -63,6 +63,10 @@ contract BlackJack {
         _;
     }
 
+    function get_winner() external view returns (address) {
+        return winner;
+    }
+
     function get_stand_dealer() external view returns (bool) {
         return standD;
     }
@@ -89,6 +93,14 @@ contract BlackJack {
 
     function get_balance_dealer() public view returns (uint256 cash) {
         return dealer.cashAmmount;
+    }
+
+    function get_player_sum() public view returns (uint32) {
+        return player.sumPlayer;
+    }
+
+    function get_dealer_sum() public view returns (uint32) {
+        return dealer.sumDealer;
     }
 
     function choose_dealer(uint256 value) public check_balance(value) {
@@ -233,14 +245,19 @@ contract BlackJack {
             (player.sumPlayer <= 21) &&
             (dealer.sumDealer <= 21)
         ) {
-            token.transfer(player.name, dealer.cashAmmount);
-
+            token.transfer(
+                player.name,
+                dealer.cashAmmount + player.cashAmmount
+            );
             winner = player.name;
         } else if (player.sumPlayer == dealer.sumDealer) {
             token.transfer(player.name, dealer.cashAmmount);
             token.transfer(dealer.name, player.cashAmmount);
         } else {
-            token.transfer(dealer.name, player.cashAmmount);
+            token.transfer(
+                dealer.name,
+                player.cashAmmount + dealer.cashAmmount
+            );
             winner = dealer.name;
         }
         emit Compare(

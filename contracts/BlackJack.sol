@@ -83,7 +83,7 @@ contract BlackJack {
         return player.name;
     }
 
-    function get_cards_amount() public view returns (uint256 count) {
+    function get_cards_amount() public view returns (uint count) {
         return ammountOfCards;
     }
 

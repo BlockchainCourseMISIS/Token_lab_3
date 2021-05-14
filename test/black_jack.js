@@ -1,5 +1,3 @@
-const { assert } = require("chai");
-
 const FishkaToken = artifacts.require("FishkaToken");
 const BlackJack = artifacts.require("BlackJack");
 
@@ -12,7 +10,7 @@ contract("Game process test", async (accounts) => {
       black_jack = await BlackJack.deployed();
     });
 
-    it("transfer test", async () => {
+    it("transfer", async () => {
       await fishka_token.transfer(accounts[1], 5);
       const balanceOf0 = await fishka_token.balanceOf(accounts[0]);
       const balanceOf1 = await fishka_token.balanceOf(accounts[1]);
@@ -94,12 +92,12 @@ contract("Game process test", async (accounts) => {
     it("check winner", async () => {
       await black_jack.checkWinner();
       const balance_of_dealer = await fishka_token.balanceOf(accounts[0]);
-
       const balance_of_player = await fishka_token.balanceOf(accounts[1]);
 
       const sum_player = await black_jack.get_player_sum();
       const sum_dealer = await black_jack.get_dealer_sum();
       const winner = await black_jack.get_winner();
+
       if (sum_player > sum_dealer && sum_player <= 21 && sum_dealer <= 21) {
         assert.equal(winner, accounts[1]);
         assert.equal(

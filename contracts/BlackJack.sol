@@ -97,9 +97,10 @@ contract BlackJack {
         public
         payable
         only_player
-        check_balance(player.cashAmmount + value)
+    //check_balance(player.cashAmmount + value)
     {
         player.cashAmmount += value;
+        token.transferFrom(player.name, address(this), value);
         emit Deposit(msg.sender, value);
     } // увеличение ставки
 
@@ -107,10 +108,12 @@ contract BlackJack {
         public
         payable
         only_dealer
-        check_balance(dealer.cashAmmount + value)
+    //check_balance(dealer.cashAmmount + value)
     {
         dealer.cashAmmount += value;
+        token.transferFrom(dealer.name, address(this), value);
         emit Deposit(msg.sender, value);
+
         require(
             (player.cashAmmount) == dealer.cashAmmount,
             "Rates must be the same."
@@ -218,14 +221,14 @@ contract BlackJack {
             (player.sumPlayer <= 21) &&
             (dealer.sumDealer <= 21)
         ) {
-            token.transferFrom(dealer.name, player.name, dealer.cashAmmount);
+            token.transfer(player.name, dealer.cashAmmount);
 
             winner = player.name;
         } else if (player.sumPlayer == dealer.sumDealer) {
-            token.transferFrom(dealer.name, player.name, dealer.cashAmmount);
-            token.transferFrom(player.name, dealer.name, player.cashAmmount);
+            token.transfer(player.name, dealer.cashAmmount);
+            token.transfer(dealer.name, player.cashAmmount);
         } else {
-            token.transferFrom(player.name, dealer.name, player.cashAmmount);
+            token.transfer(dealer.name, player.cashAmmount);
             winner = dealer.name;
         }
         emit Compare(

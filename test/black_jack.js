@@ -192,6 +192,5 @@ contract("Game process test", async (accounts) => {
         } 
       });
     });
-   
   });
 });

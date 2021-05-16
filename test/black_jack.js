@@ -74,7 +74,7 @@ contract("Game process test", async (accounts) => {
         assert.equal(
           amount.toNumber(),
           48,
-          "amount of cards should be equal to 47"
+          "amount of cards should be equal to 48"
         );
       });
 
@@ -158,7 +158,7 @@ contract("Game process test", async (accounts) => {
           assert.equal(
             balance_of_player.toNumber(),
             0,
-            "balance of dealer should be equal to 10"
+            "balance of player should be equal to 0"
           );
         }
       });
